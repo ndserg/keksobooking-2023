@@ -18,4 +18,16 @@ module.exports = {
   watchOptions: {
     ignored: /node_modules/,
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [`style-loader`, `css-loader`]
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [`file-loader`]
+      }
+    ],
+  },
 };
