@@ -21,11 +21,10 @@ const customPinSettings = {
 const defaultPin = L.icon(mainPinSettings);
 const customPin = L.icon(customPinSettings);
 
-let map = null;
+const map = L.map('map-canvas');
+const markersGroup = L.layerGroup().addTo(map);
 
 const mapInit = () => {
-  map = L.map('map-canvas');
-
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -39,13 +38,14 @@ const mapInit = () => {
   marker.addTo(map);
 };
 
-const addMarkers = (data) => {
-  const layerGroup = L.layerGroup().addTo(map);
+const addMarkers = (data, qty) => {
+  markersGroup.clearLayers();
+  const offersQty = data.length < qty ? data.length : qty;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < offersQty; i++) {
     const marker = L.marker(data[i].location, {icon: customPin});
     marker.bindPopup(createOfferPopup(data[i])).openPopup();
-    layerGroup.addLayer(marker);
+    marker.addTo(markersGroup);
   }
 };
 
