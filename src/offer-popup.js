@@ -1,23 +1,5 @@
-const ROOM_TYPES = {
-  palace : 'Дворец',
-  flat: 'Квартира',
-  bungalow : 'Бунгало',
-  hotel: 'Отель',
-  house: 'Дом'
-};
-
-const declOfNums = (num, item1, items2, items5) => {
-  let string = '';
-  if (num === 1 || (num > 20 && num % 10 === 1)) {
-    string = `${num} ${item1}`;
-  } else if (num > 1 && num < 5 || (num > 20 && num % 10 > 1 && num % 10 < 5)) {
-    string = `${num} ${items2}`;
-  } else if (num > 4 && num < 21 || num % 10 > 4 || num % 10 === 0) {
-    string = `${num} ${items5}`;
-  }
-
-  return string;
-};
+import {roomTypes} from './const.js';
+import {declOfNums} from './utils.js';
 
 const getFeaturesTemplate = (features) =>
   `<ul class="popup__features">
@@ -35,7 +17,7 @@ const createOfferPopup = (data) =>
     ${data.offer.title ? `<h3 class="popup__title">${data.offer.title}</h3>` : ''}
     ${data.offer.addresss ? `<p class="popup__text popup__text--address">${data.offer.address}</p>` : ''}
     ${data.offer.price ? `<p class="popup__text popup__text--price">${data.offer.price} <span>₽/ночь</span></p>` : ''}
-    ${data.offer.type ? `<h4 class="popup__type">${ROOM_TYPES[data.offer.type]}</h4>` : ''}
+    ${data.offer.type ? `<h4 class="popup__type">${roomTypes[data.offer.type]}</h4>` : ''}
     ${data.offer.rooms && data.offer.guests ? `<p class="popup__text popup__text--capacity">${declOfNums(data.offer.rooms, 'комната', 'комнаты', 'комнат')} для ${declOfNums(data.offer.guests, 'гостя', 'гостей', 'гостей')}</p>` : ''}
     ${data.offer.checkin && data.offer.checkout ? `<p class="popup__text popup__text--time">Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}</p>` : ''}
     ${data.offer.features && data.offer.features.length > 0 ? getFeaturesTemplate(data.offer.features) : ''}

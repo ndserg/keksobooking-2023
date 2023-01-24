@@ -1,30 +1,38 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {createOfferPopup} from './offer-popup.js';
-
-
-const startCoords = {
-  lat: 35.66023,
-  lng: 139.73007,
-};
-
-const mainPinSettings = {
-  iconUrl: 'img/main-pin.svg',
-  iconSize: [40, 40]
-};
-
-const customPinSettings = {
-  iconUrl: 'img/pin.svg',
-  iconSize: [30, 30]
-};
+import {mainPinSettings, customPinSettings} from './const.js';
 
 const defaultPin = L.icon(mainPinSettings);
 const customPin = L.icon(customPinSettings);
 
-const map = L.map('map-canvas');
-const markersGroup = L.layerGroup().addTo(map);
+let map = null;
+const markersGroup = L.layerGroup();
 
-const mapInit = () => {
+const getAddress = ({ lat, lng }) => `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+const setMainPin = (startCoords, setAddressInput) => {
+  const mainMarker = L.marker(startCoords,
+    {
+      draggable: true,
+      autoPan: true,
+      icon: defaultPin,
+    },
+  );
+
+  mainMarker.addTo(map);
+
+  setAddressInput(getAddress(mainMarker.getLatLng()));
+
+  mainMarker.on('moveend', (evt) => {
+    setAddressInput(getAddress(evt.target.getLatLng()));
+  });
+};
+
+const mapInit = (startCoords, onMapInit, setAddressInput) => {
+  const {lat, lng, zoom} = startCoords;
+
+  map = L.map('map-canvas');
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -32,10 +40,13 @@ const mapInit = () => {
     },
   ).addTo(map);
 
-  map.setView(startCoords, 12);
+  map.setView([lat, lng], zoom);
 
-  const marker = L.marker(startCoords).setIcon(defaultPin);
-  marker.addTo(map);
+  map.whenReady(() => {
+    setMainPin([lat, lng], setAddressInput);
+    markersGroup.addTo(map);
+    onMapInit();
+  });
 };
 
 const addMarkers = (data, qty) => {
@@ -49,4 +60,8 @@ const addMarkers = (data, qty) => {
   }
 };
 
-export {mapInit, addMarkers};
+const destroyMap = () => {
+  map.remove();
+};
+
+export {mapInit, destroyMap, addMarkers};

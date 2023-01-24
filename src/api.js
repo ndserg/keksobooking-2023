@@ -1,4 +1,4 @@
-const URL = 'https://27.javascript.pages.academy/keksobooking/data';
+import {URL} from './const.js';
 
 const checkResponse = (response) => {
   if (response.ok) {
@@ -8,11 +8,21 @@ const checkResponse = (response) => {
   }
 };
 
-const loadData = (onSuccess) => {
-  fetch(URL)
+const loadData = (onDataLoaded, onLoadError) => {
+  fetch(`${URL}/data`)
     .then((response) => checkResponse(response))
-    .then((data) => onSuccess(data))
-    .catch((e) => console.error(e.message));
+    .then((data) => onDataLoaded(data))
+    .catch(() => onLoadError());
 };
 
-export {loadData};
+const sendData = (formData, onPostDataSuccess, onError) => {
+  fetch(URL, {
+    method: 'POST',
+    body: formData
+  })
+    .then((response) => checkResponse(response))
+    .then(() => onPostDataSuccess())
+    .catch(() => onError());
+};
+
+export {loadData, sendData};
