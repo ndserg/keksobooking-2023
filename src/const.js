@@ -2,6 +2,8 @@ const URL = 'https://27.javascript.pages.academy/keksobooking';
 
 const offersQtyToDisplay = 10;
 
+const offersRenderDelay = 1000;
+
 const mapStartCoords = {
   lat: 35.66023,
   lng: 139.73007,
@@ -87,4 +89,4 @@ const avatarDefaultImg = 'img/muffin-grey.svg';
 
 const adFormErrorClass = 'ad-form__error';
 
-export {URL, offersQtyToDisplay, mapStartCoords, defaultFilterSettings, housePrices, filterTypes, filtersSettings, mainPinSettings, customPinSettings, invalidClass, titleLength, houseTypePrices, roomsException, avatarDefaultImg, adFormErrorClass, roomTypes};
+export {URL, offersQtyToDisplay, mapStartCoords, defaultFilterSettings, housePrices, filterTypes, filtersSettings, mainPinSettings, customPinSettings, invalidClass, titleLength, houseTypePrices, roomsException, avatarDefaultImg, adFormErrorClass, roomTypes, offersRenderDelay};

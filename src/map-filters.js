@@ -20,20 +20,23 @@ const getOffersByFeatures = (item) => {
 
 const getSortedOffers = (offers) => offers.filter(getOffersByType).filter(getOffersByPrice).filter(getOffersByRooms).filter(getOffersByGuests).filter(getOffersByFeatures);
 
-const mapFiltersChangeHandler = (evt, offers, onFilterChange) => {
-  if (evt.target.name !== filterTypes.features) {
-    filtersSettings[evt.target.name] = evt.target.value;
-  } else if (filtersSettings[evt.target.name].has(evt.target.value)) {
-    filtersSettings[evt.target.name].delete(evt.target.value);
+const setFilters = (filter) => {
+  if (filter.name !== filterTypes.features) {
+    filtersSettings[filter.name] = filter.value;
+  } else if (filtersSettings[filter.name].has(filter.value)) {
+    filtersSettings[filter.name].delete(filter.value);
   } else {
-    filtersSettings[evt.target.name].add(evt.target.value);
+    filtersSettings[filter.name].add(filter.value);
   }
-
-  onFilterChange(getSortedOffers(offers));
 };
 
-const setMapFiltersChangeHandler = (offers, onFilterChange) => {
-  mapFilters.addEventListener('change', (evt) => mapFiltersChangeHandler(evt, offers, onFilterChange));
+const mapFiltersChangeHandler = (evt, onFilterChange) => {
+  setFilters(evt.target);
+  onFilterChange();
+};
+
+const setMapFiltersChangeHandler = (onFilterChange) => {
+  mapFilters.addEventListener('change', (evt) => mapFiltersChangeHandler(evt, onFilterChange));
 };
 
 const resetMapFilters = () => {

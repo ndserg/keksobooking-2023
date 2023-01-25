@@ -1,4 +1,5 @@
-import {offersQtyToDisplay, mapStartCoords} from './const.js';
+import {offersQtyToDisplay, mapStartCoords, offersRenderDelay} from './const.js';
+import {debounce} from './utils.js';
 import {shuffleArray} from './utils.js';
 import {mapInit, destroyMap, addMarkers} from './map.js';
 import {loadData, sendData} from './api.js';
@@ -22,9 +23,7 @@ const initMap = () => {
   mapInit(mapStartCoords, onMapInit, setAddressInput);
 };
 
-const onFilterChange = () => {
-  addMarkers(shuffleArray(getSortedOffers(offers)), offersQtyToDisplay);
-};
+const onFilterChange = debounce(()=> addMarkers(shuffleArray(getSortedOffers(offers)), offersQtyToDisplay), offersRenderDelay);
 
 const onPostDataSuccess = () => {
   const successElement = successTemplate.cloneNode(true);
@@ -70,7 +69,7 @@ const onDataLoaded = (data) => {
   enableForms();
   setFormCheck();
   adFormOnSubmit(onSubmit);
-  setMapFiltersChangeHandler(offers, onFilterChange);
+  setMapFiltersChangeHandler(onFilterChange);
 };
 
 const loadErrorButtonClickHandler = (evt) => {
