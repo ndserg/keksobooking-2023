@@ -30,4 +30,12 @@ const shuffleArray = (array) => {
   return array;
 };
 
-export {declOfNums, shuffleArray};
+const debounce = (func, ms) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), ms);
+  };
+};
+
+export {declOfNums, shuffleArray, debounce};
