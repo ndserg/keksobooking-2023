@@ -1,5 +1,3 @@
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import {createOfferPopup} from './offer-popup.js';
 import {mainPinSettings, customPinSettings} from './const.js';
 

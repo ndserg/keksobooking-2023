@@ -1,13 +1,39 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 
-module.exports = {
-  mode: 'development',
+module.exports = (env, argv) => ({
   entry: './src/main.js',
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, `public`),
+    filename: 'js/bundle.js',
+    path: path.resolve(__dirname, 'dist'),
   },
-  devtool: `source-map`,
+  devtool: argv.mode === 'development' ? 'source-map' : false,
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'public', 'index.html'),
+      filename: 'index.html',
+      inject: 'body',
+      scriptLoading: 'module'
+      }),
+      new FileManagerPlugin({
+        events: {
+          onStart: {
+          delete: ['dist'],
+          },
+          onEnd: {
+            copy: [
+              {source: 'public/**/*',
+              destination: 'dist',
+              globOptions: {
+                ignore: 'public/index.html',
+              },
+            },
+            ],
+          },
+        },
+      }),
+  ],
   devServer: {
     static: {
       directory: path.resolve(__dirname, 'public'),
@@ -18,16 +44,4 @@ module.exports = {
   watchOptions: {
     ignored: /node_modules/,
   },
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: [`style-loader`, `css-loader`]
-      },
-      {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [`file-loader`]
-      }
-    ],
-  },
-};
+});
